@@ -1,4 +1,4 @@
-module github.com/tychy/toukijo_code
+module github.com/tychy/toukijo-code
 
 go 1.22.1
 
