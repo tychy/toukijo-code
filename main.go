@@ -53,13 +53,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// CSVとして出力
-	file, err := os.Create("toukijo.csv")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
 	var keys []string
 	for key := range codes {
 		keys = append(keys, key)
@@ -68,10 +61,32 @@ func main() {
 		return keys[i] < keys[j]
 	})
 
+	// CSVとして出力
+	file, err := os.Create("toukijo.csv")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
 	writer := csv.NewWriter(file)
 	writer.Write([]string{"code", "name"})
 	for _, code := range keys {
 		writer.Write([]string{code, codes[code]})
 	}
 	writer.Flush()
+
+	// Markdownとして出力
+	file, err = os.Create("README.md")
+	if err != nil {
+		panic(err)
+	}
+
+	file.WriteString("# 登記所コード一覧\n")
+
+	header := "| code | name |\n| --- | --- |\n"
+	file.WriteString(header)
+	for _, code := range keys {
+		file.WriteString("| " + code + " | " + codes[code] + " |\n")
+	}
+
 }
